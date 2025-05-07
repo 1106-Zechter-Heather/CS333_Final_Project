@@ -318,26 +318,33 @@ class TestUtilFunctions(unittest.TestCase):
         """Test generate_task_report with various tasks."""
         tasks = [self.task1, self.task2, self.task3]
         
+        # Create a task that's actually overdue (yesterday and pending)
+        overdue_task = self.task2.copy()
+        overdue_task["status"] = "pending"
+        overdue_task["task_id"] = "task-overdue"
+        modified_tasks = [self.task1, self.task2, self.task3, overdue_task]
+        
         # Full report
-        report = generate_task_report(tasks)
-        self.assertEqual(report["total"], 3)
+        report = generate_task_report(modified_tasks)
+        self.assertEqual(report["total"], 4)
         self.assertEqual(report["completed"], 1)
-        self.assertEqual(report["pending"], 2)
-        self.assertEqual(report["overdue"], 1)  # task1 is overdue
-        self.assertEqual(report["completion_rate"], 33.3)
+        self.assertEqual(report["pending"], 3)
+        self.assertEqual(report["overdue"], 1)  # overdue_task is overdue
+        self.assertEqual(report["completion_rate"], 25.0)
         
         # Report with only completed tasks
-        report = generate_task_report(tasks, completed_only=True)
+        report = generate_task_report(modified_tasks, completed_only=True)
         self.assertEqual(len(report["tasks"]), 1)
         self.assertEqual(report["tasks"][0]["task_id"], "task-2")
         
         # Report with only pending tasks
-        report = generate_task_report(tasks, pending_only=True)
-        self.assertEqual(len(report["tasks"]), 2)
+        report = generate_task_report(modified_tasks, pending_only=True)
+        self.assertEqual(len(report["tasks"]), 3)
         
         # Report with only overdue tasks
-        report = generate_task_report(tasks, overdue_only=True)
+        report = generate_task_report(modified_tasks, overdue_only=True)
         self.assertEqual(len(report["tasks"]), 1)
+        self.assertEqual(report["tasks"][0]["task_id"], "task-overdue")
         
         # Empty list
         report = generate_task_report([])
