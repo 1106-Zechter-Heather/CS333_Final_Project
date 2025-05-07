@@ -1,0 +1,6 @@
+theme: jekyll-theme-cayman
+title: Task Manager
+description: A simple, efficient Python task management system
+show_downloads: true
+github:
+  repository_url: https://github.com/1106-Zechter-Heather/CS333_Final_Project
