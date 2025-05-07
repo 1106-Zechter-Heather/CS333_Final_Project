@@ -84,6 +84,28 @@ class TestTaskManager(unittest.TestCase):
         self.assertEqual(task4.category, "Personal")
         self.assertEqual(task4.status, TaskStatus.PENDING)
     
+    def test_priority_convenience_methods(self):
+        """Test the priority convenience methods."""
+        # Add tasks with different priorities
+        high_task = self.manager.add_task("High Priority Task", priority="high")
+        med_task = self.manager.add_task("Medium Priority Task", priority="medium")
+        low_task = self.manager.add_task("Low Priority Task", priority="low")
+
+        # Test high priority convenience method
+        high_tasks = self.manager.get_high_priority_tasks()
+        self.assertEqual(len(high_tasks), 1)
+        self.assertIn(high_task, high_tasks)
+
+        # Test medium priority convenience method
+        med_tasks = self.manager.get_medium_priority_tasks()
+        self.assertEqual(len(med_tasks), 1)
+        self.assertIn(med_task, med_tasks)
+
+        # Test low priority convenience method
+        low_tasks = self.manager.get_low_priority_tasks()
+        self.assertEqual(len(low_tasks), 1)
+        self.assertIn(low_task, low_tasks)
+
     def test_add_task_validation(self):
         """Test validation when adding tasks."""
         # Invalid title (empty)
